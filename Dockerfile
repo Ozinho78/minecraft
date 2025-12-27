@@ -26,7 +26,7 @@ RUN useradd -m -d /opt/minecraft -s /bin/bash minecraft
 
 WORKDIR /opt/minecraft
 
-COPY server12111.jar /opt/minecraft/minecraft_server.jar
+COPY server.jar /opt/minecraft/minecraft_server.jar
 RUN chown minecraft:minecraft /opt/minecraft/minecraft_server.jar
 
 RUN echo '#!/bin/bash\n\
@@ -77,10 +77,6 @@ USER minecraft
 
 # Expose Minecraft port
 EXPOSE ${MINECRAFT_PORT}
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:${MINECRAFT_PORT} || exit 1
 
 # Set volume for persistent data
 VOLUME ["/opt/minecraft"]
