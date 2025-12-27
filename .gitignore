@@ -112,6 +112,7 @@ pytest.ini
 checklist/
 infos/
 test/
+logs/
 
 server12111.jar
 server.jar

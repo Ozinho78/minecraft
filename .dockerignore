@@ -1,0 +1,114 @@
+# Git-specific files
+.git
+.gitignore
+.gitattributes
+
+# Docker-specific files (not necessary within image)
+docker-compose.yml
+docker-compose.yaml
+docker-compose.*.yml
+Dockerfile
+Dockerfile.*
+.dockerignore
+
+# environment and secret files
+.env
+.env.*
+*.env
+.env.local
+.env.production
+.env.development
+secrets/
+*.key
+*.pem
+*.p12
+*.pfx
+
+# documentation
+README.md
+README
+*.md
+docs/
+documentation/
+CHANGELOG.md
+LICENSE
+CONTRIBUTING.md
+
+# CI/CD and Testing
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+tests/
+test/
+*.test
+*.spec
+coverage/
+.coverage
+
+# IDE and editor configurations
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-*
+.project
+.classpath
+.settings/
+
+# build-artefacts and temp-files
+*.log
+logs/
+*.tmp
+*.temp
+tmp/
+temp/
+*.cache
+.cache/
+
+# minecraft-specific exceptions
+world_backup/
+backups/
+*.backup
+crash-reports/
+debug/
+
+# python-specific
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+.venv/
+
+# node/npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# monitoring and logs
+*.log.*
+*.gz
+monitoring/
+metrics/
+
+# OS-specific files
+Thumbs.db
+Desktop.ini
+.Trash-*
+
+# project-specific files
+scripts/deployment/
+scripts/testing/
+*.example
+.keep
+
+# custom directories for project
+checklist/
+infos/
+test/
