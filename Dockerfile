@@ -27,59 +27,15 @@ RUN useradd -m -d /opt/minecraft -s /bin/bash minecraft
 WORKDIR /opt/minecraft
 
 COPY server.jar /opt/minecraft/minecraft_server.jar
-RUN chown minecraft:minecraft /opt/minecraft/minecraft_server.jar
+COPY scripts/start.sh /opt/minecraft/start.sh
 
-RUN echo '#!/bin/bash\n\
-set -e\n\
-\n\
-# Accept EULA if environment variable is set\n\
-if [ "${EULA}" = "true" ]; then\n\
-    echo "eula=true" > eula.txt\n\
-    echo "EULA accepted via environment variable"\n\
-else\n\
-    echo "ERROR: You must accept the Minecraft EULA by setting EULA=true"\n\
-    echo "See https://www.minecraft.net/en-us/eula for details"\n\
-    exit 1\n\
-fi\n\
-\n\
-# Generate server.properties if it does not exist\n\
-if [ ! -f server.properties ]; then\n\
-    echo "Generating server.properties..."\n\
-    cat > server.properties <<EOF\n\
-# Minecraft server properties\n\
-server-port=${MINECRAFT_PORT}\n\
-motd=${SERVER_NAME}\n\
-gamemode=${GAMEMODE}\n\
-difficulty=${DIFFICULTY}\n\
-max-players=${MAX_PLAYERS}\n\
-online-mode=${ONLINE_MODE}\n\
-pvp=${PVP}\n\
-spawn-protection=${SPAWN_PROTECTION}\n\
-view-distance=${VIEW_DISTANCE}\n\
-enable-command-block=false\n\
-level-name=world\n\
-level-seed=\n\
-allow-nether=true\n\
-enable-query=false\n\
-enable-rcon=false\n\
-EOF\n\
-fi\n\
-\n\
-# Start Minecraft server\n\
-echo "Starting Minecraft Server ${MINECRAFT_VERSION}..."\n\
-exec java -Xms${MEMORY_MIN} -Xmx${MEMORY_MAX} -jar minecraft_server.jar nogui\n\
-' > /opt/minecraft/start.sh && \
-    chmod +x /opt/minecraft/start.sh && \
-    chown minecraft:minecraft /opt/minecraft/start.sh
+RUN chown minecraft:minecraft /opt/minecraft/minecraft_server.jar /opt/minecraft/start.sh && \
+    chmod +x /opt/minecraft/start.sh
 
-# Switch to minecraft user
 USER minecraft
 
-# Expose Minecraft port
 EXPOSE ${MINECRAFT_PORT}
 
-# Set volume for persistent data
 VOLUME ["/opt/minecraft"]
 
-# Start server
 CMD ["/opt/minecraft/start.sh"]
