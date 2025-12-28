@@ -5,7 +5,6 @@ A production-ready, containerized Minecraft Java Edition server built with Docke
 ## Table of Contents
 
 - [Description](#description)
-- [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Quickstart](#quickstart)
 - [Usage](#usage)
@@ -221,4 +220,4 @@ By using this software, you agree to the [Minecraft End User License Agreement](
 
 ---
 
-**Made with ❤️ the DA DevSecOps Course**
+**Made with ❤️ for the DA DevSecOps Course**
