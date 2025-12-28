@@ -13,42 +13,15 @@ A production-ready, containerized Minecraft Java Edition server built with Docke
   - [Starting the Server](#starting-the-server)
   - [Stopping the Server](#stopping-the-server)
   - [Viewing Logs](#viewing-logs)
-  - [Server Console Access](#server-console-access)
-  - [Backup and Restore](#backup-and-restore)
 - [Configuration](#configuration)
   - [Memory Settings](#memory-settings)
   - [Game Settings](#game-settings)
-  - [Port Configuration](#port-configuration)
 - [Project Structure](#project-structure)
-- [Testing](#testing)
-- [Troubleshooting](#troubleshooting)
-- [Security Considerations](#security-considerations)
 - [License](#license)
 
 ## Description
 
-This repository contains a complete Docker-based deployment solution for a Minecraft Java Edition server (version 1.21.1). The setup is designed for educational purposes as part of the Developer Academy project requirements.
-
-**Essential Contents:**
-- Custom Dockerfile for building a Minecraft server image from scratch (no pre-made images)
-- Docker Compose configuration for service orchestration
-- Persistent volume management for world data and server configuration
-- Environment-based configuration system
-- Automated server startup and management
-- Health checks and auto-restart capabilities
-
-**Purpose:**
-The primary purpose of this repository is to demonstrate containerization skills, infrastructure-as-code practices, and DevOps principles by deploying a fully functional Minecraft multiplayer server that can be accessed over the internet.
-
-## Features
-
-- 🐳 **Fully Containerized**: Built on Docker for portability and isolation
-- 💾 **Persistent Storage**: World data and configurations survive container restarts
-- ⚙️ **Configurable**: Easy customization via environment variables
-- 🔄 **Auto-Restart**: Automatic recovery from crashes
-- 🏥 **Health Checks**: Built-in monitoring for server status
-- 🔒 **Security-First**: No hardcoded credentials or sensitive data in the repository
-- 📝 **Well-Documented**: Comprehensive documentation and code comments
+This repository contains a complete Docker-based deployment solution for a Minecraft Java Edition server (version 1.21.11). The setup is designed for educational purposes.
 
 ## Prerequisites
 
@@ -193,52 +166,6 @@ View last 100 lines:
 docker compose logs --tail=100 mc-server
 ```
 
-### Server Console Access
-
-Access the Minecraft server console:
-
-```bash
-docker attach minecraft-server
-```
-
-To detach without stopping the server, press: `Ctrl+P` then `Ctrl+Q`
-
-Alternatively, execute commands directly:
-
-```bash
-docker exec minecraft-server rcon-cli "say Hello Players!"
-```
-
-### Backup and Restore
-
-**Create a backup:**
-
-```bash
-# Stop the server first
-docker compose down
-
-# Create backup of the volume
-docker run --rm -v minecraft-world-data:/data -v $(pwd)/backups:/backup \
-  ubuntu tar czf /backup/minecraft-backup-$(date +%Y%m%d-%H%M%S).tar.gz -C /data .
-
-# Restart server
-docker compose up -d
-```
-
-**Restore from backup:**
-
-```bash
-# Stop the server
-docker compose down
-
-# Restore from backup
-docker run --rm -v minecraft-world-data:/data -v $(pwd)/backups:/backup \
-  ubuntu tar xzf /backup/minecraft-backup-YYYYMMDD-HHMMSS.tar.gz -C /data
-
-# Restart server
-docker compose up -d
-```
-
 ## Configuration
 
 ### Memory Settings
@@ -270,21 +197,6 @@ PVP=true
 VIEW_DISTANCE=10
 ```
 
-### Port Configuration
-
-The server is mapped to port 8888 by default. To change:
-
-1. Edit `docker-compose.yaml`:
-   ```yaml
-   ports:
-     - "YOUR_PORT:25565"
-   ```
-
-2. Update your firewall rules:
-   ```bash
-   sudo ufw allow YOUR_PORT/tcp
-   ```
-
 ## Project Structure
 
 ```
@@ -299,150 +211,6 @@ minecraft-server/
 └── backups/                  # Backup storage (created manually)
 ```
 
-**Key Files:**
-
-- **Dockerfile**: Defines the container image, installs Java, downloads Minecraft server, and configures the startup script
-- **docker-compose.yaml**: Orchestrates the `mc-server` service, defines ports, volumes, and environment variables
-- **.env.example**: Template for environment configuration (copy to `.env`)
-- **.gitignore**: Prevents sensitive data (credentials, world files, logs) from being committed
-- **README.md**: Complete documentation for setup, usage, and troubleshooting
-
-**Data Persistence:**
-
-- **minecraft-data volume**: Stores world files, server configuration, and player data
-- **logs/ directory**: Mounted for easy access to server logs
-- Both persist across container restarts and updates
-
-## Testing
-
-Before submitting the project, verify the following:
-
-### 1. Server Accessibility
-
-Test connection to port 8888:
-
-```bash
-# Check if port is listening
-netstat -tuln | grep 8888
-
-# Test from external machine
-telnet YOUR_SERVER_IP 8888
-```
-
-### 2. Python mcstatus Test
-
-Install and test with mcstatus:
-
-```bash
-pip install mcstatus
-
-# Check server status
-mcstatus YOUR_SERVER_IP:8888 status
-
-# Get detailed info
-mcstatus YOUR_SERVER_IP:8888 ping
-```
-
-### 3. In-Game Connection
-
-1. Open Minecraft Java Edition
-2. Multiplayer → Direct Connect
-3. Enter: `YOUR_SERVER_IP:8888`
-4. Verify you can join and play
-
-### 4. Data Persistence
-
-```bash
-# Create something in-game, then restart
-docker compose restart mc-server
-
-# Reconnect and verify your changes persisted
-```
-
-### 5. Auto-Restart
-
-```bash
-# Simulate crash
-docker kill minecraft-server
-
-# Verify container restarts automatically
-docker ps | grep minecraft-server
-```
-
-## Troubleshooting
-
-### Server won't start
-
-**Check EULA acceptance:**
-```bash
-docker compose logs mc-server | grep EULA
-```
-
-**Solution**: Ensure `EULA=true` in `.env`
-
-### Can't connect to server
-
-**Verify port mapping:**
-```bash
-docker port minecraft-server
-```
-
-**Check firewall:**
-```bash
-sudo ufw status
-sudo ufw allow 8888/tcp
-```
-
-**Verify container is running:**
-```bash
-docker compose ps
-```
-
-### Out of memory errors
-
-**Increase memory limits in `.env`:**
-```bash
-MEMORY_MAX=4096M
-```
-
-**Check Docker resource limits:**
-```bash
-docker stats minecraft-server
-```
-
-### World data not persisting
-
-**Verify volume:**
-```bash
-docker volume inspect minecraft-world-data
-```
-
-**Check volume mounts:**
-```bash
-docker inspect minecraft-server | grep -A 10 Mounts
-```
-
-## Security Considerations
-
-This deployment follows security best practices:
-
-- ✅ No hardcoded credentials in code
-- ✅ Environment variables for configuration
-- ✅ `.env` file excluded from Git
-- ✅ SSH keys and sensitive data in `.gitignore`
-- ✅ Non-root user in container
-- ✅ Resource limits configured
-- ✅ Health checks enabled
-
-**Additional security recommendations:**
-
-1. **Change default ports** to non-standard values
-2. **Enable whitelist** for trusted players only
-3. **Use strong RCON passwords** if enabled
-4. **Regular backups** of world data
-5. **Keep Minecraft server updated** to latest version
-6. **Monitor logs** for suspicious activity
-
 ## License
 
 This project is created for educational purposes as part of the Developer Academy curriculum.
@@ -453,4 +221,4 @@ By using this software, you agree to the [Minecraft End User License Agreement](
 
 ---
 
-**Made with ❤️ for the Developer Academy Project**
+**Made with ❤️ the DA DevSecOps Course**
