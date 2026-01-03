@@ -32,7 +32,7 @@ Containerized Minecraft Java Edition Server (Version 1.21.11). The setup uses Do
 ### 1. Clone repository
 ```bash
 git clone -b feature/minecraft-deployment git@github.com:Ozinho78/minecraft.git
-cd minecraft-server
+cd minecraft
 ```
 
 ### 2. Configure environment
@@ -73,7 +73,7 @@ All settings in the `.env` file:
 EULA=true
 
 # Server identity
-SERVER_NAME=My Minecraft Server
+SERVER_NAME=MyMinecraftServer
 MAX_PLAYERS=20
 
 # Memory settings
@@ -134,7 +134,7 @@ docker compose up -d --build
 
 ## Project Structure
 ```
-minecraft-server/
+minecraft/
 ├── Dockerfile             # Container image definition
 ├── docker-compose.yaml    # Service orchestration
 ├── entrypoint.sh          # Server entrypoint
@@ -156,6 +156,7 @@ By using this software you agree to the [Minecraft EULA](https://www.minecraft.n
 
 ---
 
-**Last Updated: January 2026** <br>
-**Course: DevSecOps** <br>
-**Project: Mincecraft Server Containerization Project** <br>
+**Project Information:**
+- **Last Updated:** January 2026
+- **Course:** DevSecOps
+- **Project:** Minecraft Server Containerization Project
