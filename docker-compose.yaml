@@ -3,10 +3,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        MINECRAFT_VERSION: "${MINECRAFT_VERSION:-1.21.11}"
     container_name: minecraft-server
     restart: unless-stopped
     ports:
-      - "8888:25565"
+      - "8888:25565"    
     environment:
       EULA: "${EULA:-false}"
       MINECRAFT_VERSION: "${MINECRAFT_VERSION:-1.21.11}"
@@ -32,9 +34,10 @@ services:
         reservations:
           cpus: '1'
           memory: 2G
-    
     networks:
       - minecraft-net
+    security_opt:
+      - no-new-privileges:true
 
 volumes:
   minecraft-data:

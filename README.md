@@ -1,223 +1,315 @@
 # Minecraft Server - Docker Deployment
 
-A production-ready, containerized Minecraft Java Edition server built with Docker and Docker Compose.
+Containerisierter Minecraft Java Edition Server (Version 1.21.11) für die DevSecOps Ausbildung.
 
-## Table of Contents
+## Features
 
-- [Description](#description)
-- [Prerequisites](#prerequisites)
-- [Quickstart](#quickstart)
-- [Usage](#usage)
-  - [Environment Configuration](#environment-configuration)
-  - [Starting the Server](#starting-the-server)
-  - [Stopping the Server](#stopping-the-server)
-  - [Viewing Logs](#viewing-logs)
-- [Configuration](#configuration)
-  - [Memory Settings](#memory-settings)
-  - [Game Settings](#game-settings)
-- [Project Structure](#project-structure)
-- [License](#license)
+- ✅ **Automatischer Download**: Server JAR wird beim Build von Mojang heruntergeladen
+- ✅ **Multi-Stage Build**: Optimiertes Docker Image (~400MB)
+- ✅ **Security**: Non-root User, Resource Limits, Health Checks
+- ✅ **Performance**: Optimierte JVM Flags (G1GC)
+- ✅ **Einfache Konfiguration**: Alle Settings via `.env` Datei
 
-## Description
+## Voraussetzungen
 
-This repository contains a complete Docker-based deployment solution for a Minecraft Java Edition server (version 1.21.11). The setup is designed for educational purposes.
+- Docker Engine 20.10+
+- Docker Compose 2.0+
+- Minecraft Java Edition 1.21.11 (Client)
+- Mindestens 2GB RAM, 2 CPU Cores
 
-## Prerequisites
+## Quick Start
 
-Before you begin, ensure you have the following installed:
-
-- **Docker Engine**: Version 20.10 or higher
-  ```bash
-  docker --version
-  ```
-- **Docker Compose**: Version 2.0 or higher
-  ```bash
-  docker compose version
-  ```
-- **Git**: For cloning the repository
-  ```bash
-  git --version
-  ```
-
-**System Requirements:**
-- Minimum 2GB RAM (4GB recommended)
-- 2 CPU cores (recommended)
-- 10GB free disk space
-- Open port 8888 (or your configured port) in your firewall
-
-## Quickstart
-
-Get your Minecraft server up and running in 5 minutes:
-
-1. **Clone the repository:**
-   ```bash
-   git clone <repository-url>
-   cd minecraft-server
-   ```
-
-2. **Create environment configuration:**
-   ```bash
-   cp .env.example .env
-   ```
-
-3. **Accept the Minecraft EULA:**
-   
-   Edit the `.env` file and set:
-   ```bash
-   EULA=true
-   ```
-   
-   By setting this to `true`, you accept the [Minecraft End User License Agreement](https://www.minecraft.net/en-us/eula).
-
-4. **Start the server:**
-   ```bash
-   docker compose up -d
-   ```
-
-5. **Check server status:**
-   ```bash
-   docker compose logs -f mc-server
-   ```
-
-6. **Connect to your server:**
-   
-   Open Minecraft Java Edition and connect to:
-   ```
-   <your-server-ip>:8888
-   ```
-
-That's it! Your Minecraft server is now running.
-
-## Usage
-
-### Environment Configuration
-
-All server configuration is managed through environment variables. Copy the example file to create your configuration:
+### 1. Repository klonen
 
 ```bash
+git clone <repository-url>
+cd minecraft-server
+```
+
+### 2. Umgebung konfigurieren
+
+```bash
+# .env Datei erstellen
 cp .env.example .env
+
+# .env bearbeiten und EULA akzeptieren
+nano .env
 ```
 
-Edit `.env` to customize your server. **Important settings:**
+**Wichtig:** Setze `EULA=true` um die [Minecraft EULA](https://www.minecraft.net/en-us/eula) zu akzeptieren.
+
+### 3. Server starten
 
 ```bash
-# REQUIRED: Accept Minecraft EULA
-EULA=true
-
-# Server identity
-SERVER_NAME=My Awesome Server
-MAX_PLAYERS=20
-
-# Memory allocation (adjust based on your system)
-MEMORY_MIN=1024M
-MEMORY_MAX=2048M
-
-# Game settings
-GAMEMODE=survival
-DIFFICULTY=normal
-```
-
-### Starting the Server
-
-Start the server in detached mode (runs in background):
-
-```bash
+# Image bauen und Server starten
 docker compose up -d
-```
 
-Start with logs visible:
-
-```bash
-docker compose up
-```
-
-Build and start (after Dockerfile changes):
-
-```bash
-docker compose up -d --build
-```
-
-### Stopping the Server
-
-Gracefully stop the server:
-
-```bash
-docker compose down
-```
-
-Stop and remove volumes (⚠️ **WARNING**: This deletes your world data):
-
-```bash
-docker compose down -v
-```
-
-### Viewing Logs
-
-View real-time logs:
-
-```bash
+# Logs verfolgen
 docker compose logs -f mc-server
 ```
 
-View last 100 lines:
-
-```bash
-docker compose logs --tail=100 mc-server
+Warte bis du diese Meldung siehst:
+```
+Done (XXs)! For help, type "help"
 ```
 
-## Configuration
+### 4. Verbinden
 
-### Memory Settings
+Öffne Minecraft Java Edition 1.21.11:
+- Multiplayer → Add Server
+- Server Address: `<deine-ip>:8888`
+- Join!
 
-Adjust JVM memory allocation based on your server resources:
+## Konfiguration
 
-| Players | RAM    | Config                               |
-|---------|--------|--------------------------------------|
-| 1-5     | 2GB    | `MEMORY_MIN=1024M MEMORY_MAX=2048M` |
-| 5-10    | 4GB    | `MEMORY_MIN=2048M MEMORY_MAX=4096M` |
-| 10-20   | 6GB    | `MEMORY_MIN=3072M MEMORY_MAX=6144M` |
-| 20+     | 8GB+   | `MEMORY_MIN=4096M MEMORY_MAX=8192M` |
-
-### Game Settings
-
-Configure gameplay parameters in `.env`:
+Alle Einstellungen in der `.env` Datei:
 
 ```bash
-# Game mode: survival, creative, adventure, spectator
-GAMEMODE=survival
+# Minecraft EULA (ERFORDERLICH)
+EULA=true
 
-# Difficulty: peaceful, easy, normal, hard
-DIFFICULTY=normal
+# Server Identität
+SERVER_NAME=My Minecraft Server
+MAX_PLAYERS=20
 
-# Enable PvP combat
+# Memory Einstellungen
+MEMORY_MIN=1024M
+MEMORY_MAX=2048M
+
+# Gameplay
+GAMEMODE=survival        # survival, creative, adventure, spectator
+DIFFICULTY=normal        # peaceful, easy, normal, hard
 PVP=true
-
-# Render distance (2-32 chunks)
 VIEW_DISTANCE=10
+
+# Authentifizierung
+ONLINE_MODE=true         # true = Mojang Auth (empfohlen)
 ```
 
-## Project Structure
+### Memory Empfehlungen
+
+| Spieler | RAM Einstellung |
+|---------|----------------|
+| 1-5     | `MEMORY_MIN=1024M MEMORY_MAX=2048M` |
+| 5-10    | `MEMORY_MIN=2048M MEMORY_MAX=4096M` |
+| 10-20   | `MEMORY_MIN=3072M MEMORY_MAX=6144M` |
+
+## Verwendung
+
+### Server Management
+
+```bash
+# Server starten
+docker compose up -d
+
+# Logs anzeigen
+docker compose logs -f mc-server
+
+# Server stoppen
+docker compose down
+
+# Server neu starten
+docker compose restart
+
+# Status prüfen
+docker compose ps
+docker stats minecraft-server
+```
+
+### Nach Dockerfile Änderungen
+
+```bash
+# Image neu bauen
+docker compose build --no-cache
+
+# Mit Rebuild starten
+docker compose up -d --build
+```
+
+### Backup
+
+```bash
+# Server stoppen
+docker compose down
+
+# Backup erstellen
+docker run --rm \
+  -v minecraft-world-data:/data:ro \
+  -v $(pwd)/backups:/backup \
+  ubuntu:22.04 \
+  tar czf /backup/world-backup-$(date +%Y%m%d).tar.gz /data
+
+# Server starten
+docker compose up -d
+```
+
+### Restore
+
+```bash
+# Server stoppen
+docker compose down
+
+# Volume löschen
+docker volume rm minecraft-world-data
+
+# Wiederherstellen
+docker run --rm \
+  -v minecraft-world-data:/data \
+  -v $(pwd)/backups:/backup \
+  ubuntu:22.04 \
+  tar xzf /backup/world-backup-YYYYMMDD.tar.gz -C /
+
+# Server starten
+docker compose up -d
+```
+
+## Projektstruktur
 
 ```
 minecraft-server/
-├── Dockerfile                 # Custom Minecraft server image definition
-├── docker-compose.yaml        # Service orchestration configuration
-├── .env.example              # Example environment variables (template)
-├── .env                      # Actual environment config (not in Git)
-├── .gitignore                # Git ignore patterns
-├── README.md                 # This file
-├── logs/                     # Server logs (volume mount)
-└── backups/                  # Backup storage (created manually)
+├── Dockerfile              # Container Image Definition
+├── docker-compose.yaml     # Service Orchestrierung
+├── scripts/
+│   └── start.sh           # Server Entrypoint
+├── .env.example           # Konfigurations-Template
+├── .dockerignore          # Build Context Ausschlüsse
+├── .gitignore             # Git Ausschlüsse
+├── logs/                  # Server Logs (auto-erstellt)
+└── README.md              # Diese Datei
 ```
 
-## License
+## Troubleshooting
 
-This project is created for educational purposes as part of the Developer Academy curriculum.
+### Server startet nicht
 
-Minecraft is a trademark of Mojang Studios. This project is not affiliated with or endorsed by Mojang Studios.
+**Problem:** `ERROR: You must accept the Minecraft EULA`
 
-By using this software, you agree to the [Minecraft End User License Agreement](https://www.minecraft.net/en-us/eula).
+**Lösung:**
+```bash
+# .env bearbeiten
+nano .env
+# Setze: EULA=true
+
+# Neu starten
+docker compose restart
+```
+
+### Kann nicht verbinden
+
+**Problem:** Connection refused / Connection timed out
+
+**Checks:**
+```bash
+# 1. Server läuft?
+docker compose ps
+
+# 2. Port erreichbar?
+netstat -tulpn | grep 8888
+
+# 3. Firewall?
+sudo ufw allow 8888/tcp
+sudo ufw status
+
+# 4. Logs prüfen
+docker compose logs mc-server | tail -50
+```
+
+### Out of Memory
+
+**Problem:** Server crasht oder ist langsam
+
+**Lösung:**
+```bash
+# Memory in .env erhöhen
+MEMORY_MAX=4096M
+MEMORY_LIMIT=5G
+
+# Neu starten
+docker compose restart
+```
+
+### Version Mismatch
+
+**Problem:** "Incompatible client/server version"
+
+**Lösung:**
+- Stelle sicher dass dein Client Version 1.21.11 ist
+- Für andere Versionen: `MINECRAFT_VERSION` in .env ändern und neu bauen
+
+## Technische Details
+
+### Docker Multi-Stage Build
+
+Das Dockerfile nutzt einen zweistufigen Build:
+
+1. **Downloader Stage**: Lädt `server.jar` von Mojang
+2. **Runtime Stage**: Kopiert nur die JAR, ohne Build-Tools
+
+Vorteil: Kleineres finales Image (~400MB statt ~600MB)
+
+### Sicherheit
+
+- **Non-root User**: Container läuft als `minecraft` (UID 1000)
+- **Security Options**: `no-new-privileges`, keine zusätzlichen Capabilities
+- **Resource Limits**: CPU und Memory begrenzt
+- **Health Checks**: Automatische Überwachung
+
+### Performance
+
+JVM ist mit G1 Garbage Collector optimiert:
+- Reduzierte Lag-Spikes durch GC-Tuning
+- Optimale Memory-Nutzung
+- Pre-touched Memory Allocation
+
+## Netzwerk & Firewall
+
+### Port Freigabe
+
+```bash
+# UFW (Ubuntu/Debian)
+sudo ufw allow 8888/tcp
+sudo ufw enable
+
+# firewalld (RHEL/CentOS)
+sudo firewall-cmd --permanent --add-port=8888/tcp
+sudo firewall-cmd --reload
+
+# iptables
+sudo iptables -A INPUT -p tcp --dport 8888 -j ACCEPT
+```
+
+### Router Port Forwarding
+
+Für Zugriff von außerhalb deines Netzwerks:
+1. Router Admin öffnen
+2. Port Forwarding einrichten: `8888 → <server-ip>:8888`
+3. Öffentliche IP ermitteln: `curl ifconfig.me`
+
+## FAQ
+
+**Q: Warum ist server.jar nicht im Repository?**  
+A: Die JAR wird automatisch beim Build heruntergeladen. Dies:
+- Hält das Repo klein (~100KB statt ~50MB)
+- Entspricht Mojangs Redistribution-Richtlinien
+- Ermöglicht einfache Version-Updates
+
+**Q: Wie ändere ich die Minecraft Version?**  
+A: Passe in `.env` den `MINECRAFT_VERSION` Wert an, update die `SERVER_JAR_URL` im Dockerfile mit der neuen URL von [Mojang](https://launchermeta.mojang.com/mc/game/version_manifest.json), und baue neu: `docker compose build --no-cache`
+
+**Q: Kann ich Plugins nutzen?**  
+A: Dieses Setup nutzt Vanilla Minecraft. Für Plugins brauchst du Paper/Spigot und musst das Dockerfile anpassen.
+
+**Q: Wo sind die World-Daten gespeichert?**  
+A: Im Docker Volume `minecraft-world-data`. Prüfe mit: `docker volume inspect minecraft-world-data`
+
+## Lizenz
+
+Dieses Projekt wurde für Bildungszwecke im Rahmen der DevSecOps Ausbildung erstellt.
+
+**Minecraft** ist eine Marke von Mojang Studios (Microsoft). Dieses Projekt ist nicht mit Mojang Studios verbunden oder von diesem unterstützt.
+
+Durch die Nutzung dieser Software stimmst du der [Minecraft EULA](https://www.minecraft.net/en-us/eula) zu.
 
 ---
 
-**Made with ❤️ for the DA DevSecOps Course**
+**DevSecOps Academy - Containerization Project**
