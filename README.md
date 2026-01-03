@@ -9,15 +9,13 @@ Containerized Minecraft Java Edition Server (Version 1.21.11). The setup uses Do
 1. [Requirements](#requirements)
 2. [Quickstart](#quickstart)
 3. [Configuration](#configuration)
+    - [Memory Recommendations](#memory-recommendations)
 4. [Usage](#usage)
-
-
-   - [Environment Configuration](#environment-configuration)
-   - [Building and Running](#building-and-running)
-   - [Accessing the Application](#accessing-the-application)
-   - [Managing Services](#managing-services)
-   - [Working with Logs](#working-with-logs)
-
+    - [Server Management](#server-management)
+    - [After Dockerfile Changes](#after-dockerfile-changes)
+5. [Project Structure](#project-structure)
+6. [License](#license)
+   
 ---
 
 ## Requirements
@@ -132,177 +130,21 @@ docker compose build --no-cache
 docker compose up -d --build
 ```
 
-### Backup
-```bash
-# Stop server
-docker compose down
-
-# Create backup
-docker run --rm \
-  -v minecraft-world-data:/data:ro \
-  -v $(pwd)/backups:/backup \
-  ubuntu:22.04 \
-  tar czf /backup/world-backup-$(date +%Y%m%d).tar.gz /data
-
-# Start server
-docker compose up -d
-```
-
-### Restore
-```bash
-# Stop server
-docker compose down
-
-# Delete volume
-docker volume rm minecraft-world-data
-
-# Restore
-docker run --rm \
-  -v minecraft-world-data:/data \
-  -v $(pwd)/backups:/backup \
-  ubuntu:22.04 \
-  tar xzf /backup/world-backup-YYYYMMDD.tar.gz -C /
-
-# Start server
-docker compose up -d
-```
+---
 
 ## Project Structure
 ```
 minecraft-server/
-├── Dockerfile              # Container image definition
-├── docker-compose.yaml     # Service orchestration
-├── scripts/
-│   └── start.sh           # Server entrypoint
-├── .env.example           # Configuration template
+├── Dockerfile             # Container image definition
+├── docker-compose.yaml    # Service orchestration
+├── entrypoint.sh          # Server entrypoint
+├── .env.example           # Configuration template, contains all environment variables
 ├── .dockerignore          # Build context exclusions
 ├── .gitignore             # Git exclusions
-├── logs/                  # Server logs (auto-created)
-└── README.md              # This file
+└── README.md              # This file, project documentation and usage
 ```
 
-## Troubleshooting
-
-### Server won't start
-
-**Problem:** `ERROR: You must accept the Minecraft EULA`
-
-**Solution:**
-```bash
-# Edit .env
-nano .env
-# Set: EULA=true
-
-# Restart
-docker compose restart
-```
-
-### Cannot connect
-
-**Problem:** Connection refused / Connection timed out
-
-**Checks:**
-```bash
-# 1. Server running?
-docker compose ps
-
-# 2. Port reachable?
-netstat -tulpn | grep 8888
-
-# 3. Firewall?
-sudo ufw allow 8888/tcp
-sudo ufw status
-
-# 4. Check logs
-docker compose logs mc-server | tail -50
-```
-
-### Out of Memory
-
-**Problem:** Server crashes or is slow
-
-**Solution:**
-```bash
-# Increase memory in .env
-MEMORY_MAX=4096M
-MEMORY_LIMIT=5G
-
-# Restart
-docker compose restart
-```
-
-### Version Mismatch
-
-**Problem:** "Incompatible client/server version"
-
-**Solution:**
-- Make sure your client is version 1.21.11
-- For other versions: change `MINECRAFT_VERSION` in .env and rebuild
-
-## Technical Details
-
-### Docker Multi-Stage Build
-
-The Dockerfile uses a two-stage build:
-
-1. **Downloader Stage**: Downloads `server.jar` from Mojang
-2. **Runtime Stage**: Copies only the JAR, without build tools
-
-Advantage: Smaller final image (~400MB instead of ~600MB)
-
-### Security
-
-- **Non-root User**: Container runs as `minecraft` (UID 1000)
-- **Security Options**: `no-new-privileges`, no additional capabilities
-- **Resource Limits**: CPU and memory limited
-- **Health Checks**: Automatic monitoring
-
-### Performance
-
-JVM is optimized with G1 Garbage Collector:
-- Reduced lag spikes through GC tuning
-- Optimal memory usage
-- Pre-touched memory allocation
-
-## Network & Firewall
-
-### Port Opening
-```bash
-# UFW (Ubuntu/Debian)
-sudo ufw allow 8888/tcp
-sudo ufw enable
-
-# firewalld (RHEL/CentOS)
-sudo firewall-cmd --permanent --add-port=8888/tcp
-sudo firewall-cmd --reload
-
-# iptables
-sudo iptables -A INPUT -p tcp --dport 8888 -j ACCEPT
-```
-
-### Router Port Forwarding
-
-For access from outside your network:
-1. Open router admin
-2. Set up port forwarding: `8888 → <server-ip>:8888`
-3. Determine public IP: `curl ifconfig.me`
-
-## FAQ
-
-**Q: Why is server.jar not in the repository?**  
-A: The JAR is automatically downloaded during build. This:
-- Keeps the repo small (~100KB instead of ~50MB)
-- Complies with Mojang's redistribution guidelines
-- Enables easy version updates
-
-**Q: How do I change the Minecraft version?**  
-A: Adjust the `MINECRAFT_VERSION` value in `.env`, update the `SERVER_JAR_URL` in the Dockerfile with the new URL from [Mojang](https://launchermeta.mojang.com/mc/game/version_manifest.json), and rebuild: `docker compose build --no-cache`
-
-**Q: Can I use plugins?**  
-A: This setup uses vanilla Minecraft. For plugins you need Paper/Spigot and must modify the Dockerfile.
-
-**Q: Where is the world data stored?**  
-A: In the Docker volume `minecraft-world-data`. Check with: `docker volume inspect minecraft-world-data`
+---
 
 ## License
 
