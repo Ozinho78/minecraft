@@ -1,11 +1,9 @@
 #!/bin/bash
-# Minecraft Server Startup Script
 set -e
 
 echo "=== Minecraft Server Startup ==="
 echo "Version: ${MINECRAFT_VERSION}"
 
-# Check EULA
 if [ "${EULA}" != "true" ]; then
     echo "ERROR: You must accept the Minecraft EULA"
     echo "Set EULA=true in your .env file"
@@ -16,7 +14,6 @@ fi
 echo "EULA accepted"
 echo "eula=true" > eula.txt
 
-# Generate server.properties if not exists
 if [ ! -f server.properties ]; then
     echo "Generating server.properties..."
     cat > server.properties <<EOF
@@ -36,7 +33,6 @@ EOF
     echo "server.properties created"
 fi
 
-# Display configuration
 echo ""
 echo "Server Configuration:"
 echo "  Port:         ${MINECRAFT_PORT}"
@@ -46,7 +42,6 @@ echo "  Gamemode:     ${GAMEMODE}"
 echo "  Difficulty:   ${DIFFICULTY}"
 echo ""
 
-# Start server with optimized JVM flags
 echo "Starting Minecraft server..."
 exec java \
     -Xms${MEMORY_MIN} \

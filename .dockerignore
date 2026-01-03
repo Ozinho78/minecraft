@@ -72,7 +72,7 @@ tests/
 .travis.yml
 Jenkinsfile
 
-# Docker files we don't need in context
+# Docker files not needed in context
 docker-compose.override.yml
 docker-compose.*.yml
 !docker-compose.yaml
