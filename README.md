@@ -1,14 +1,24 @@
 # Minecraft Server - Docker Deployment
 
-Containerized Minecraft Java Edition Server (Version 1.21.11) for DevSecOps training.
+Containerized Minecraft Java Edition Server (Version 1.21.11). The setup uses Docker and Docker Compose to orchestrate a complete production environment.
 
-## Features
+---
 
-- ✅ **Automatic Download**: Server JAR is downloaded from Mojang during build
-- ✅ **Multi-Stage Build**: Optimized Docker image (~400MB)
-- ✅ **Security**: Non-root user, resource limits, health checks
-- ✅ **Performance**: Optimized JVM flags (G1GC)
-- ✅ **Easy Configuration**: All settings via `.env` file
+## Table of Contents
+
+1. [Requirements](#requirements)
+2. [Quickstart](#quickstart)
+3. [Configuration](#configuration)
+4. [Usage](#usage)
+
+
+   - [Environment Configuration](#environment-configuration)
+   - [Building and Running](#building-and-running)
+   - [Accessing the Application](#accessing-the-application)
+   - [Managing Services](#managing-services)
+   - [Working with Logs](#working-with-logs)
+
+---
 
 ## Requirements
 
@@ -16,6 +26,8 @@ Containerized Minecraft Java Edition Server (Version 1.21.11) for DevSecOps trai
 - Docker Compose 2.0+
 - Minecraft Java Edition 1.21.11 (Client)
 - At least 2GB RAM, 2 CPU cores
+
+---
 
 ## Quick Start
 
@@ -34,7 +46,8 @@ cp .env.example .env
 nano .env
 ```
 
-**Important:** Set `EULA=true` to accept the [Minecraft EULA](https://www.minecraft.net/en-us/eula).
+> [!Important]
+> Set `EULA=true` to accept the [Minecraft EULA](https://www.minecraft.net/en-us/eula).
 
 ### 3. Start server
 ```bash
@@ -45,17 +58,14 @@ docker compose up -d
 docker compose logs -f mc-server
 ```
 
-Wait until you see this message:
-```
-Done (XXs)! For help, type "help"
-```
-
 ### 4. Connect
 
 Open Minecraft Java Edition 1.21.11:
 - Multiplayer → Add Server
 - Server Address: `<your-ip>:8888`
 - Join!
+
+---
 
 ## Configuration
 
@@ -89,6 +99,8 @@ ONLINE_MODE=true         # true = Mojang Auth (recommended)
 | 1-5     | `MEMORY_MIN=1024M MEMORY_MAX=2048M` |
 | 5-10    | `MEMORY_MIN=2048M MEMORY_MAX=4096M` |
 | 10-20   | `MEMORY_MIN=3072M MEMORY_MAX=6144M` |
+
+---
 
 ## Usage
 
