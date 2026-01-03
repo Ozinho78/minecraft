@@ -156,6 +156,6 @@ By using this software you agree to the [Minecraft EULA](https://www.minecraft.n
 
 ---
 
-**Last Updated: January 2026**
-**Course: DevSecOps**
-**Project: Mincecraft Server Containerization Project**
+**Last Updated: January 2026** <br>
+**Course: DevSecOps** <br>
+**Project: Mincecraft Server Containerization Project** <br>
