@@ -42,7 +42,7 @@ services:
 volumes:
   minecraft-data:
     driver: local
-    name: minecraft-world-data
+    name: minecraft-world-data  
   minecraft-logs:
     driver: local
     name: minecraft-server-logs
