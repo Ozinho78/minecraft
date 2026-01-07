@@ -12,7 +12,7 @@ if [ "${EULA}" != "true" ]; then
 fi
 
 echo "EULA accepted"
-echo "eula=true" > eula.txt
+echo "eula=false" > eula.txt
 
 if [ ! -f server.properties ]; then
     echo "Generating server.properties..."

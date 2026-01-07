@@ -6,7 +6,7 @@ Containerized Minecraft Java Edition Server (Version 1.21.11). The setup uses Do
 
 ## Table of Contents
 
-1. [Requirements](#requirements)
+1. [Prerequisites](#prerequisites)
 2. [Quickstart](#quickstart)
 3. [Configuration](#configuration)
     - [Memory Recommendations](#memory-recommendations)
@@ -18,7 +18,7 @@ Containerized Minecraft Java Edition Server (Version 1.21.11). The setup uses Do
    
 ---
 
-## Requirements
+## Prerequisites
 
 - Docker Engine 20.10+
 - Docker Compose 2.0+
@@ -31,7 +31,7 @@ Containerized Minecraft Java Edition Server (Version 1.21.11). The setup uses Do
 
 ### 1. Clone repository
 ```bash
-git clone -b feature/minecraft-deployment git@github.com:Ozinho78/minecraft.git
+git clone
 cd minecraft
 ```
 
