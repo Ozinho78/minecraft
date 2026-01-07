@@ -43,6 +43,9 @@ volumes:
   minecraft-data:
     driver: local
     name: minecraft-world-data
+  minecraft-logs:
+    driver: local
+    name: minecraft-server-logs
 
 networks:
   minecraft-net:
