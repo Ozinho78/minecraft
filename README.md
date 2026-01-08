@@ -31,7 +31,7 @@ Containerized Minecraft Java Edition Server (Version 1.21.11). The setup uses Do
 
 ### 1. Clone repository
 ```bash
-git clone git@github.com:Ozinho78/minecraft.git
+git clone -b feature/minecraft-deployment git@github.com:Ozinho78/minecraft.git
 cd minecraft
 ```
 
