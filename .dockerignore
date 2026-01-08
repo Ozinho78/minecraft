@@ -1,0 +1,96 @@
+# Docker build context exclusions
+# This file prevents unnecessary files from being sent to the Docker daemon
+
+# Git files
+.git
+.gitignore
+.gitattributes
+.github
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+
+# Documentation
+README.md
+docs/
+*.md
+!scripts/*.md
+
+# Minecraft server files (not needed in build)
+minecraft_server.jar
+server.jar
+eula.txt
+server.properties
+banned-*.json
+ops.json
+whitelist.json
+usercache.json
+
+# World data
+world/
+world_nether/
+world_the_end/
+backups/
+logs/
+crash-reports/
+
+# Temporary files
+*.log
+*.tmp
+tmp/
+temp/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.class
+*.jar
+!minecraft_server.jar
+target/
+build/
+
+# Testing
+test/
+tests/
+*.test
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+Jenkinsfile
+
+# Docker files not needed in context
+docker-compose.override.yml
+docker-compose.*.yml
+!docker-compose.yaml
+
+# Node modules (if any)
+node_modules/
+npm-debug.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+venv/
+env/
+
+# OS files
+*.DS_Store
+.AppleDouble
+.LSOverride
+desktop.ini
